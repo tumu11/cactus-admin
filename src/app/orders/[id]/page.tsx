@@ -232,6 +232,11 @@ export default async function OrderLieferscheinPage({ params }: PageProps) {
   }
 
   const order = data as Order;
+  const { data: customer, error: customerErr } = await supabase
+    .from("customers")
+    .select("name, owner_name, street, zip, city, phone, email")
+    .eq("customer_number", order.customer_number)
+    .single();
   const items: OrderItem[] = Array.isArray(order.items) ? order.items : [];
 
   const subtotal =
@@ -255,10 +260,13 @@ export default async function OrderLieferscheinPage({ params }: PageProps) {
               <div>78224 Singen (Hohentwiel)</div>
               <div>Deutschland</div>
               <div style={{ marginTop: 4 }}>
-                Tel: <span style={styles.companyBold}>+49 7732 123456</span>
+                Tel: <span style={styles.companyBold}>+49 15568 538598</span>
               </div>
               <div>
                 E-Mail: <span style={styles.companyBold}>info@cactusgrosshandel.com</span>
+              </div>
+              <div>
+                Website: <span style={styles.companyBold}>www.cactusgrosshandel.com</span>
               </div>
             </div>
 
@@ -268,7 +276,26 @@ export default async function OrderLieferscheinPage({ params }: PageProps) {
               <h1 style={styles.docTitle}>Lieferschein</h1>
             </div>
           </div>
+          {/* KUNDE / EMPFÄNGER */}
+          <div style={{ marginTop: 16 }}>
+            <h3 style={styles.sectionTitle}>Empfänger (Kunde)</h3>
+            <p style={styles.paragraph}>
+              <strong>{customer?.name ?? order.customer_number}</strong><br />
 
+              {customer?.owner_name && (
+                <>Inhaber: {customer.owner_name}<br /></>
+              )}
+
+              {customer?.street && <>{customer.street}<br /></>}
+
+              {(customer?.zip || customer?.city) && (
+                <>{customer?.zip ?? ""} {customer?.city ?? ""}<br /></>
+              )}
+
+              {customer?.phone && <>Tel: {customer.phone}<br /></>}
+              {customer?.email && <>E-Mail: {customer.email}</>}
+            </p>
+          </div>
           {/* Müşteri & tarih bilgileri tablosu */}
           <table style={styles.metaTable}>
             <thead>
