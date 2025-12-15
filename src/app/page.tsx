@@ -412,12 +412,14 @@ export default function AdminPage() {
                           Details
                         </button>
 
-                        <button
-                          style={styles.lieferscheinBtn}
-                          onClick={() => window.open(`/orders/${o.id}`, "_blank")}
+                        <a
+                          href={`/api/orders/${o.id}/lieferschein`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="rounded-lg bg-black px-3 py-1.5 text-white text-sm hover:opacity-90"
                         >
-                          Lieferschein
-                        </button>
+                          Lieferschein (PDF)
+                        </a>
                       </div>
                     </td>
                   </tr>
@@ -453,9 +455,9 @@ export default function AdminPage() {
 
                 <button
                   style={styles.lieferscheinBtn}
-                  onClick={() => window.open(`/orders/${selectedOrder.id}`, "_blank")}
+                  onClick={() => window.open(`/api/orders/${selectedOrder.id}/lieferschein`, "_blank")}
                 >
-                  Lieferschein öffnen
+                  Lieferschein (PDF) öffnen
                 </button>
               </div>
 
@@ -542,8 +544,8 @@ export default function AdminPage() {
                   {selectedOrder.payment_method === "bar"
                     ? "Barzahlung"
                     : selectedOrder.payment_method === "rechnung"
-                    ? "Auf Rechnung"
-                    : "–"}
+                      ? "Auf Rechnung"
+                      : "–"}
                 </p>
               </div>
 
